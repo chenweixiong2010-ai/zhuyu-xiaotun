@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "index.html",
+      "src": "zhuyu-xiaotun/index.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/zhuyu-xiaotun/index.html"
     }
   ]
 }
