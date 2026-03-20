@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知遇小豚 - 真诚交友平台</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-icon">🐬</span>
+                <span class="logo-text">知遇小豚</span>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active" data-page="home">首页</a>
+                <a href="#create" class="nav-link" data-page="create">发布卡片</a>
+                <a href="#profile" class="nav-link" data-page="profile">我的</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main">
+        <!-- 首页 - 卡片列表 -->
+        <section id="home" class="page active">
+            <!-- 搜索筛选区 -->
+            <div class="filter-section">
+                <div class="container">
+                    <div class="filter-form">
+                        <div class="filter-group">
+                            <label>性别：</label>
+                            <select id="filter-gender" class="filter-select">
+                                <option value="">全部</option>
+                                <option value="male">男生</option>
+                                <option value="female">女生</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>城市：</label>
+                            <select id="filter-city" class="filter-select">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                        <button id="btn-search" class="btn btn-primary">搜索</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 卡片列表 -->
+            <div class="container">
+                <div id="cards-list" class="cards-list">
+                    <!-- 卡片将通过 JS 动态加载 -->
+                </div>
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>加载中...</p>
+                </div>
+                <div id="no-more" class="no-more" style="display: none;">
+                    <p>没有更多卡片了</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发布卡片页面 -->
+        <section id="create" class="page">
+            <div class="container">
+                <div class="form-card">
+                    <h2 class="form-title">发布交友卡片</h2>
+                    <form id="create-card-form" class="form">
+                        <div class="form-group">
+                            <label for="card-nickname">昵称 *</label>
+                            <input type="text" id="card-nickname" class="form-input" required maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-age">年龄 *</label>
+                            <input type="number" id="card-age" class="form-input" required min="18" max="100" placeholder="18-100">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-gender">性别 *</label>
+                            <select id="card-gender" class="form-select" required>
+                                <option value="">请选择</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-city">城市 *</label>
+                            <select id="card-city" class="form-select" required>
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-intro">自我介绍 *</label>
+                            <textarea id="card-intro" class="form-textarea" required maxlength="500" placeholder="介绍一下自己吧~（最多 500 字）"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-requirement">期待 TA *</label>
+                            <textarea id="card-requirement" class="form-textarea" required maxlength="500" placeholder="你希望对方是什么样的？（最多 500 字）"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-wechat">微信号 *</label>
+                            <input type="text" id="card-wechat" class="form-input" required maxlength="100" placeholder="用于联系的微信号">
+                        </div>
+                        <div class="form-tip">
+                            <p>💡 提示：发布后可在「我的」页面管理您的卡片</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">发布卡片</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个人中心页面 -->
+        <section id="profile" class="page">
+            <div class="container">
+                <!-- 用户信息卡片 -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">👤</div>
+                        <div class="profile-info">
+                            <h3 id="profile-nickname" class="profile-nickname">未登录</h3>
+                            <div id="profile-vip-badge" class="vip-badge" style="display: none;">
+                                <span class="vip-icon">👑</span>
+                                <span class="vip-text">VIP 会员</span>
+                            </div>
+                            <p id="profile-city" class="profile-city"></p>
+                        </div>
+                    </div>
+
+                    <!-- 解锁统计 -->
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-value" id="stat-free-unlock">2</div>
+                            <div class="stat-label">今日免费解锁</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="stat-share-unlock">0</div>
+                            <div class="stat-label">分享解锁</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="stat-total-views">0</div>
+                            <div class="stat-label">卡片浏览</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 登录表单 -->
+                <div id="login-section" class="form-card" style="display: none;">
+                    <h2 class="form-title">登录 / 注册</h2>
+                    <form id="login-form" class="form">
+                        <div class="form-group">
+                            <label for="login-nickname">昵称 *</label>
+                            <input type="text" id="login-nickname" class="form-input" required maxlength="50" placeholder="请输入昵称">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-gender">性别 *</label>
+                            <select id="login-gender" class="form-select" required>
+                                <option value="">请选择</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-city">城市 *</label>
+                            <select id="login-city" class="form-select" required>
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">开始交友之旅</button>
+                    </form>
+                </div>
+
+                <!-- 已登录内容 -->
+                <div id="logged-in-section" style="display: none;">
+                    <!-- VIP 升级卡片 -->
+                    <div class="vip-promo-card">
+                        <div class="promo-header">
+                            <span class="promo-icon">👑</span>
+                            <h3>升级为 VIP 会员</h3>
+                        </div>
+                        <ul class="promo-benefits">
+                            <li>✅ 无限查看微信号</li>
+                            <li>✅ 卡片置顶展示</li>
+                            <li>✅ 专属 VIP 标识</li>
+                            <li>✅ 优先匹配推荐</li>
+                        </ul>
+                        <button id="btn-vip-upgrade" class="btn btn-gold btn-block">开通 VIP</button>
+                        <p class="promo-note">分享朋友圈也可获得免费 VIP 时长</p>
+                    </div>
+
+                    <!-- 分享解锁区 -->
+                    <div class="share-section">
+                        <h3 class="section-title">分享解锁微信号</h3>
+                        <div class="share-actions">
+                            <button id="btn-share-moment" class="btn btn-outline btn-block">
+                                <span class="btn-icon">📱</span>
+                                分享到朋友圈
+                            </button>
+                            <button id="btn-share-group" class="btn btn-outline btn-block">
+                                <span class="btn-icon">💬</span>
+                                分享到微信群
+                            </button>
+                            <button id="btn-share-friend" class="btn btn-outline btn-block">
+                                <span class="btn-icon">👥</span>
+                                邀请好友注册
+                            </button>
+                        </div>
+                        <p class="share-tip">💡 每分享 1 次可解锁 1 个微信号，分享 3 次获得 1 天 VIP</p>
+                    </div>
+
+                    <!-- 我的卡片 -->
+                    <div class="my-cards-section">
+                        <h3 class="section-title">我的卡片</h3>
+                        <div id="my-cards-list" class="my-cards-list">
+                            <!-- 动态加载 -->
+                        </div>
+                    </div>
+
+                    <!-- 登录信息 -->
+                    <div class="logout-section">
+                        <button id="btn-logout" class="btn btn-outline">退出登录</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">知遇小豚 · 真诚交友平台</p>
+            <p class="footer-note">本平台致力于为用户提供严肃、健康的交友服务</p>
+        </div>
+    </footer>
+
+    <!-- 弹窗：微信号详情 -->
+    <div id="wechat-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h3 id="modal-card-title">用户资料</h3>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <span class="detail-label">昵称：</span>
+                    <span id="modal-nickname" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">年龄：</span>
+                    <span id="modal-age" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">城市：</span>
+                    <span id="modal-city" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">性别：</span>
+                    <span id="modal-gender" class="detail-value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">自我介绍：</span>
+                    <p id="modal-intro" class="detail-text"></p>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">期待 TA：</span>
+                    <p id="modal-requirement" class="detail-text"></p>
+                </div>
+
+                <!-- 微信号区域（核心功能） -->
+                <div id="wechat-section" class="wechat-section">
+                    <div id="wechat-locked" class="wechat-locked">
+                        <div class="lock-icon">🔒</div>
+                        <p class="lock-text">微信号已隐藏</p>
+                        <p class="lock-desc">免费用户每日可解锁 2 个微信号</p>
+                        <div class="unlock-actions">
+                            <button id="btn-unlock-free" class="btn btn-primary">使用免费解锁</button>
+                            <button id="btn-unlock-share" class="btn btn-outline">分享获得解锁</button>
+                        </div>
+                    </div>
+                    <div id="wechat-unlocked" class="wechat-unlocked" style="display: none;">
+                        <div class="unlock-icon">✅</div>
+                        <p class="unlock-text">已解锁微信号</p>
+                        <p id="wechat-id-display" class="wechat-id"></p>
+                        <button id="btn-copy-wechat" class="btn btn-primary">复制微信号</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：VIP 升级 -->
+    <div id="vip-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h3>升级为 VIP 会员</h3>
+            </div>
+            <div class="modal-body">
+                <div class="vip-pricing">
+                    <div class="price-card">
+                        <span class="price-duration">7 天</span>
+                        <span class="price-amount">¥9.9</span>
+                        <button class="btn btn-gold btn-block btn-select-vip" data-days="7" data-price="9.9">选择</button>
+                    </div>
+                    <div class="price-card popular">
+                        <span class="popular-tag">人气</span>
+                        <span class="price-duration">30 天</span>
+                        <span class="price-amount">¥29.9</span>
+                        <button class="btn btn-gold btn-block btn-select-vip" data-days="30" data-price="29.9">选择</button>
+                    </div>
+                    <div class="price-card">
+                        <span class="price-duration">90 天</span>
+                        <span class="price-amount">¥69.9</span>
+                        <button class="btn btn-gold btn-block btn-select-vip" data-days="90" data-price="69.9">选择</button>
+                    </div>
+                </div>
+                <p class="vip-note">💡 也可通过分享获得免费 VIP：分享 3 次得 1 天 VIP，邀请 3 位好友得 7 天 VIP</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：分享确认 -->
+    <div id="share-confirm-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h3>分享解锁</h3>
+            </div>
+            <div class="modal-body">
+                <div class="share-step">
+                    <p class="share-instruction">请按照以下步骤完成分享：</p>
+                    <ol class="share-steps">
+                        <li>截图当前页面</li>
+                        <li>打开微信</li>
+                        <li>分享到朋友圈/群聊</li>
+                        <li>返回点击「已完成」</li>
+                    </ol>
+                    <div class="share-qrcode">
+                        <p>🔗 知遇小豚 - 真诚交友平台</p>
+                        <p class="qr-note">（此处可替换为您的二维码）</p>
+                    </div>
+                    <button id="btn-share-complete" class="btn btn-primary btn-block">已完成分享</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
